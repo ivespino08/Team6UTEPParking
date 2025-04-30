@@ -67,15 +67,27 @@ class UserViewModel: ViewModel() {
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful){
+                if(checkAdmin()){
+                    trySend(AuthResponse.Error(message = task.exception?.message ?: "Must use student account"))
+                    logout()
+                    _uiState.value = UserUIState(adminLoginAttempt = true)
+                }else if (task.isSuccessful){
                     trySend(AuthResponse.Success)
                     _uiState.value = UserUIState(loggedIn = true)
                 } else {
-                    trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
+                    trySend(AuthResponse.Error(message = task.exception?.message ?: "Invalid email/password"))
                     _uiState.value = UserUIState(failedLogin = true)
                 }
             }
         awaitClose()
+    }
+
+    private fun checkAdmin(): Boolean {
+        val currentUser = auth.currentUser
+        val result = currentUser?.getIdToken(false)
+        val isAdmin = result?.result?.claims?.get("admin")
+
+        return isAdmin == true
     }
 
     fun confirmFailedLogIn(){

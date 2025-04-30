@@ -157,7 +157,9 @@ fun LoginScreen(
         }
 
         if(userUIState.failedLogin){
-            FailedLogin({userViewModel.confirmFailedLogIn()})
+            FailedLogin({userViewModel.confirmFailedLogIn()}, "Incorrect email and/or password")
+        }else if(userUIState.adminLoginAttempt){
+            FailedLogin({userViewModel.confirmFailedLogIn()}, "Please use student account")
         }
     }
 }
@@ -165,6 +167,7 @@ fun LoginScreen(
 @Composable
 fun FailedLogin(
     confirm: () -> Unit,
+    message: String,
     modifier: Modifier = Modifier
 ) {
 
@@ -175,7 +178,7 @@ fun FailedLogin(
             // onDismissRequest.
         },
         title = { Text(text = "Invalid Credentials") },
-        text = { Text(text = "Incorrect email and/or password") },
+        text = { Text(text = message) },
         modifier = modifier,
         confirmButton = {
             TextButton(

@@ -15,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.team6utepparking.ui.FailedLogin
 import com.example.team6utepparking.ui.LoginScreen
 import com.example.team6utepparking.ui.PermitScreen
 import com.example.team6utepparking.ui.UserViewModel
@@ -57,6 +58,8 @@ fun ParkingApp(
                             .onEach { response ->
                                 if (response is AuthResponse.Success) {
                                     navController.navigate(ParkingScreen.Permit.name)
+                                } else if (response is AuthResponse.Error) {
+                                    response.message
                                 }
                             }
                             .launchIn(coroutineScope)
