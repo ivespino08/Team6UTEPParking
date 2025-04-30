@@ -39,6 +39,7 @@ import com.example.team6utepparking.ui.theme.Team6UTEPParkingTheme
 
 @Composable
 fun LoginScreen(
+    modifier: Modifier,
     onSubmitButtonClicked: (String, String) -> Unit,
     userViewModel: UserViewModel
 ){
